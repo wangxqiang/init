@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>文章管理平台</title>
+    <link rel="stylesheet" href="../themes/default.css"/>
+    <link rel="stylesheet" href="./index.css"/>
+    <script src="./bmob-min.js"></script>
+    <script src="../jquery.min.js"></script>
+</head>
+<body>
+    <!--最大-->
+    <div class="box">
+        <!--上-->
+        <div class="top">
+            <div class="top-cont">
+                <div class="top-l">小程序素材管理平台</div>
+                <div class="top-r">
+                    <div>
+                        <span> <a href="javascript:;">登录</a></span>
+                        <span><a href="javascript:;">注册 </a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--中-->
+        <div class="content">
+            <div class="content-box">
+                   <!--上 -->
+                <div class="content-t" >
+                    新建图文
+                </div>
+                <!--左-->
+                <div class="content-l">
+                    <h1 class="content-l-txt"> 注意事项</h1>
+                    <h2>1,标题,摘要,封面图片 一定要写</h2>
+                    <h2>2,完整无误后方可提交</h2>
+                    <h2>3,编辑按钮第一排 第四个 可预览文章</h2>
+
+                </div>
+                <!--中-->
+                <div class="content-c">
+                    <form style="overflow: hidden">
+                        <textarea   cols="100" rows="20" style="width:800px;height:200px;" id="fn"></textarea>
+                        <br />
+                        <script src="../kindeditor-all.js"></script>
+                        <script>
+                            KindEditor.ready(function(K) {
+                                window.editor = K.create('textarea', {
+                                    allowFileManager : true,
+                                    langType : 'zh-CN',
+                                    autoHeightMode : true
+                                });
+                                K('.oks1').click(function(e) {
+
+                                  var html = editor.html();
+                                    var imgurl;
+                                    console.log(html);
+                                        var fileUploadControl = $("#img1")[0];
+                                        if (fileUploadControl.files.length > 0) {
+                                            var file = fileUploadControl.files[0];
+                                            console.log(file)
+                                            var name = file.name;
+                                            var file = new Bmob.File(name, file);
+                                            file.save().then(function (obj) {
+                                                 imgurl = obj.url();
+                                                console.log(obj.url());
+                                                fn();
+                                            }, function (error) {
+                                            });
+                                        }
+                                        function fn(){
+                                            console.log("fn")
+                                            var name=$(".t1").val();
+                                            var init=$(".t1s").val();
+                                            var GameScore = Bmob.Object.extend("beautiful");
+                                            var gameScore = new GameScore();
+                                            gameScore.set("name", name);
+                                            gameScore.set("init", init);
+                                            gameScore.set("html",html);
+                                            gameScore.set("imgurl", imgurl);
+                                            gameScore.save(null, {
+                                                success: function(object) {
+                                                    console.log("create object success, object id:"+object.id);
+                                                },
+                                                error: function(model, error) {
+                                                    alert("流程错误 ,重新添加");
+                                                }
+                                            });
+                                        }
+                                });
+                            });
+                        </script>
+                    </form>
+                    <div class="box-m1" style="width: 95%;height: 380px;background-color: powderblue;margin-top:212px;padding-left: 5%">
+                        <h2 style="text-align: center ">发布封面编辑</h2>
+                        <h2>标题</h2>
+                        <input type="text" class="t1"/>
+                        <h2>摘要</h2>
+                        <input type="text" class="t1s"/>
+                        <h2>封面</h2>
+                        <input type="file" id="img1">
+                        <br/>
+                        <button class="oks1" style="width: 200px;height: 60px ;margin:15px 260px;background-color: red;border-radius: 10px">确定提交</button>
+                    </div>
+
+                </div>
+                <!--右-->
+                <div class="content-r">
+                    <h2 class="content-0-txt" >添加素材</h2>
+                    <div class="add1">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!--下-->
+        <div class="bottom">
+        </div>
+    </div>
+</body>
+</html>
+<script src="./index.js"></script>
